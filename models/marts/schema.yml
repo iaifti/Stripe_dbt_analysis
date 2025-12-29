@@ -1,0 +1,73 @@
+version: 2
+
+models:
+  - name: fct_payments
+    columns:
+      - name: payment_id
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        data_tests:
+          - not_null
+
+  - name: fct_subscriptions
+    columns:
+      - name: subscription_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: dim_customers
+    columns:
+      - name: customer_id
+        data_tests:
+          - unique
+          - not_null
+      - name: email
+        data_tests:
+          - not_null
+      - name: country
+        data_tests:
+          - not_null
+      - name: customer_type
+        data_tests:
+          - not_null
+      - name: marketing_channel
+        data_tests:
+          - not_null
+      - name: customer_created_at
+        data_tests:
+          - not_null
+      - name: signup_month
+        data_tests:
+          - not_null
+      - name: signup_quarter
+        data_tests:
+          - not_null
+      - name: signup_year
+        data_tests:
+          - not_null
+      - name: lifetime_revenue
+        data_tests:
+          - not_null
+      - name: successful_payments
+        data_tests:
+          - not_null
+      - name: ltv_segment
+        data_tests:
+          - not_null
+
+  - name: dim_products
+    columns:
+      - name: product_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: dim_dates
+    columns:
+      - name: date_day
+        data_tests:
+          - unique
+          - not_null

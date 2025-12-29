@@ -1,0 +1,84 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "Cleaned customer data with calculated signup attributes"
+    columns:
+      - name: customer_id
+        description: "Unique customer identifier"
+        tests:
+          - unique
+          - not_null
+      - name: customer_created_at
+        tests:
+          - not_null
+      - name: country
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['US', 'GB', 'CA', 'DE', 'FR', 'AU', 'NL', 'SE', 'BR', 'IN']
+  
+  - name: stg_products
+    description: "Subscription product catalog with tier categorization"
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null
+      - name: monthly_price
+        tests:
+          - not_null
+      - name: product_tier
+        tests:
+          - accepted_values:
+              values: ['Starter', 'Professional', 'Business', 'Enterprise', 'Trial', 'Other']
+  
+  - name: stg_subscriptions
+    description: "Subscription lifecycle with duration calculations"
+    columns:
+      - name: subscription_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_products')
+              field: product_id
+  
+  - name: stg_payments
+    description: "Payment transactions with success flags and net amounts"
+    columns:
+      - name: payment_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+      - name: is_successful
+        tests:
+          - not_null
+  
+  - name: stg_invoices
+    description: "Invoice records with payment timing analysis"
+    columns:
+      - name: invoice_id
+        tests:
+          - unique
+          - not_null
+      - name: payment_id
+        tests:
+          - relationships:
+              to: ref('stg_payments')
+              field: payment_id
