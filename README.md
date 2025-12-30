@@ -147,5 +147,13 @@ Run tests with: `dbt test`
 - **Lines of SQL:** ~800
 - **Build Time:** ~45 seconds full refresh
 
+## 📊 Dashboard (Power BI)
 
-*This project was built as part of my Analytics Engineering portfolio to demonstrate dimensional modeling, SQL proficiency, and dbt expertise.*
+<img src="Dashboard.png" width="800"/>
+
+**Metrics shown:**
+- Monthly Recurring Revenue (MRR)
+- MoM Growth
+- Subscription Churn
+- Cohort Retention
+
