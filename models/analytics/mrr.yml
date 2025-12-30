@@ -1,0 +1,10 @@
+models:
+  - name: mrr
+    columns:
+      - name: payment_month
+        data_tests:
+          - not_null
+      - name: mrr
+        data_tests:
+          - not_null
+      

@@ -1,8 +1,8 @@
-with customers as (
+with cohorts as (
     select
         customer_id,
-        signup_month
-    from {{ ref('stg_customers') }}
+        cohort_month
+    from {{ ref('int_customer_cohort') }}
 ),
 
 subscriptions as (
@@ -10,36 +10,39 @@ subscriptions as (
         customer_id,
         subscription_created_at,
         canceled_at
-    from {{ ref('stg_subscriptions') }}
+    from {{ ref('int_active_subscriptions') }}
 ),
 
 months as (
     select distinct
-        payment_month as month
+        payment_month as activity_month
     from {{ ref('stg_payments') }}
 ),
 
 cohort_activity as (
     select
-        c.signup_month as cohort_month,
-        m.month as activity_month,
+        c.cohort_month,
+        m.activity_month,
         count(distinct c.customer_id) as active_customers
-    from customers c
+    from cohorts c
     join subscriptions s
         on c.customer_id = s.customer_id
     join months m
-        on m.month >= c.signup_month
-       and m.month >= date_trunc('month', s.subscription_created_at)
-       and (s.canceled_at is null or m.month < date_trunc('month', s.canceled_at))
-    group by cohort_month, activity_month
+        on m.activity_month >= c.cohort_month
+       and m.activity_month >= date_trunc('month', s.subscription_created_at)
+       and (
+            s.canceled_at is null
+            or m.activity_month < date_trunc('month', s.canceled_at)
+       )
+    group by 1, 2
 ),
 
 cohort_sizes as (
     select
-        signup_month as cohort_month,
-        count(distinct customer_id) as cohort_size
-    from customers
-    group by signup_month
+        cohort_month,
+        count(*) as cohort_size
+    from {{ ref('int_customer_cohort') }}
+    group by cohort_month
 ),
 
 final as (
@@ -48,9 +51,7 @@ final as (
         a.activity_month,
         a.active_customers,
         s.cohort_size,
-
-        a.active_customers
-        / nullif(s.cohort_size, 0) as retention_pct
+        a.active_customers / nullif(s.cohort_size, 0) as retention_pct
     from cohort_activity a
     join cohort_sizes s
         on a.cohort_month = s.cohort_month

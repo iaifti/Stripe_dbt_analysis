@@ -1,0 +1,18 @@
+models:
+  - name: cohort_retention
+    columns:
+      - name: cohort_month
+        data_tests:
+          - not_null
+      - name: activity_month
+        data_tests:
+          - not_null
+      - name: active_customers
+        data_tests:
+          - not_null
+      - name: cohort_size
+        data_tests:
+          - not_null
+      - name: retention_pct
+        data_tests:
+          - not_null

@@ -1,5 +1,4 @@
 with months as (
-    -- all months we care about
     select distinct
         payment_month as month
     from {{ ref('stg_payments') }}
@@ -14,21 +13,19 @@ subscriptions as (
 ),
 
 active_at_start as (
-    -- subscriptions active at the start of each month
     select
         m.month,
         count(distinct s.subscription_id) as active_subscriptions
     from months m
     join subscriptions s
-        on s.subscription_created_at < m.month
+        on s.subscription_created_at <= m.month
        and (s.canceled_at is null or s.canceled_at >= m.month)
     group by m.month
 ),
 
 churned_in_month as (
-    -- subscriptions that canceled during the month
     select
-        date_trunc('month', canceled_at)::date as month,
+        date_trunc('month', canceled_at + interval '1 month')::date as month,
         count(distinct subscription_id) as churned_subscriptions
     from subscriptions
     where canceled_at is not null
@@ -40,7 +37,6 @@ final as (
         a.month,
         a.active_subscriptions,
         coalesce(c.churned_subscriptions, 0) as churned_subscriptions,
-
         coalesce(c.churned_subscriptions, 0)
         / nullif(a.active_subscriptions, 0) as churn_rate
     from active_at_start a

@@ -1,10 +1,8 @@
-with monthly_revenue as (
+with base as (
     select
         payment_month,
-        sum(amount) as mrr
-    from {{ ref('stg_payments') }}
-    where is_successful = true
-    group by payment_month
+        net_revenue as mrr
+    from {{ ref('int_monthly_revenue') }}
 ),
 
 with_previous as (
@@ -12,7 +10,7 @@ with_previous as (
         payment_month,
         mrr,
         lag(mrr) over (order by payment_month) as previous_mrr
-    from monthly_revenue
+    from base
 ),
 
 final as (

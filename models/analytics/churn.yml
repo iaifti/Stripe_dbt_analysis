@@ -1,0 +1,15 @@
+models:
+  - name: churn
+    columns:
+      - name: month
+        data_tests:
+          - not_null
+      - name: active_subscriptions
+        data_tests:
+          - not_null
+      - name: churned_subscriptions
+        data_tests:
+          - not_null
+      - name: churn_rate
+        data_tests:
+          - not_null
