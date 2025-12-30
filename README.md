@@ -114,6 +114,7 @@ FROM cohort_retention
 WHERE months_since_first_order <= 6
 ORDER BY cohort_month, months_since_first_order;
 ```
+```
 
 ## Data Quality & Testing
 
