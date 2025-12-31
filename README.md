@@ -150,9 +150,15 @@ Run tests with: `dbt test`
 
 <img src="Dashboard.png" width="800"/>
 
-**Metrics shown:**
-- Monthly Recurring Revenue (MRR)
-- MoM Growth
-- Subscription Churn
-- Cohort Retention
+**Key Features:**
+- Real-time MRR tracking with month-over-month growth
+- Churn rate trends showing improvement from 29% → 17% (2022-2024)
+- Cohort retention heatmap analyzing behavior by signup quarter
+- $7.5M total revenue visualization with 8.95% MOM growth
+
+### Architecture
+- **Data Warehouse:** Snowflake + dbt
+- **Modeling:** Star schema with daily-grain fact tables
+- **Visualization:** Power BI
+- **Data Quality:** 40+ dbt tests
 
